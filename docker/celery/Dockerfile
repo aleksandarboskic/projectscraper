@@ -13,6 +13,3 @@ RUN chmod +x /opt/app/requirements.txt
 RUN pip install -r requirements.txt
 # copy project
 COPY ./app /opt/app/.
-
-COPY entrypoint.sh /opt/app/entrypoint.sh
-RUN chmod +x /opt/app/entrypoint.sh
