@@ -1,5 +1,12 @@
 from django.db import models, IntegrityError
 
+'''
+   Simple model of published article. This is classic use of Django ORM and database object generator.
+   Method save is overriden to pass IntegrityError. Item GUID is unique for any article in RSS feed, so
+   we needed to make unique constraint on GUID field. Every time when scrap_all task is executed, it can
+   have collect articles that are existing in database. If IntegrityError occurs, we just ignore that error.
+'''
+
 class Article(models.Model):
     symbol_name = models.CharField(max_length=6, db_index=True)
     symbol_item_id = models.BigAutoField(primary_key=True)

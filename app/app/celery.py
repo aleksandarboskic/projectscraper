@@ -16,7 +16,6 @@ app.autodiscover_tasks()
 
 @app.task
 def get_feed_items(provider):
-    #urltemplate = "https://feeds.finance.yahoo.com/rss/2.0/headline?s={0}&region=US&lang=en-US".format(provider)    
     urltemplate = os.environ.get("URLTEMPLATE").format(provider)
     item_list = []
     try:
