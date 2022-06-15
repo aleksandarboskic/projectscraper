@@ -25,5 +25,5 @@ class Article(models.Model):
             super(Article, self).save(*args, **kwargs)
         except IntegrityError:
             pass
-        else:
-            raise
+        except Exception as ex:
+            raise ex

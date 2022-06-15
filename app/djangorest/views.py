@@ -10,14 +10,12 @@ from djangorest.models import Article
     Views implementation. Single and multiple objects.
 '''
 
-
 class ArticleItemsView(APIView, PageNumberPagination):
     serializer_class = ArticleSerializer
     pagination_class = CustomNumberPagination
 
     def get(self, request):
         queryset = Article.objects.all()
-        #queryset = self.get_queryset()
         page = self.request.query_params.get('page')
         if page is not None:
             paginated_queryset = self.paginate_queryset(queryset, request)

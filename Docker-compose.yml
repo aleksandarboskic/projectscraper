@@ -34,7 +34,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/celery/Dockerfile
-    command: sh -c "celery -A app worker -l info"
+    command: sh -c "celery -A celerytask.celery worker -l info"
     volumes:
       - ./app:/app
     env_file:
@@ -48,7 +48,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/celery/Dockerfile
-    command: sh -c "celery -A app beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+    command: sh -c "celery -A celerytask.celery beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"
     volumes:
       - ./app:/app
     env_file:

@@ -1,28 +1,18 @@
-import os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'app.settings')
-
-import django
-django.setup()
-
 import requests
-from celery import Celery
 from bs4 import BeautifulSoup
 from djangorest import models
 import dateutil.parser as pars
+from .celery import cel
+import os
 
-app = Celery('app')
-app.config_from_object('django.conf:settings', namespace='CELERY')
-app.autodiscover_tasks()
-
-@app.task
+@cel.task
 def get_feed_items(provider):
     urltemplate = os.environ.get("URLTEMPLATE").format(provider)
-    item_list = []
     try:
         response = requests.get(urltemplate, headers={'User-Agent': 'Mozilla/5.0'})
         soup = BeautifulSoup(response.content, features='xml')
         myitems = soup.findAll('item')
-        article = models.Article();
+        article = models.Article()
         for itm in myitems:
             article.symbol_name = provider
             article.symbol_item_guid = itm.find('guid').text
@@ -35,11 +25,11 @@ def get_feed_items(provider):
         print('Job failed. Please see exception:')
         print(e)
 
-@app.task
+@cel.task
 def scrap_one(provider):
     get_feed_items(provider)
 
-@app.task
+@cel.task
 def scrap_all():
     listofitems = os.environ.get("FEEDITEMS").split(",")
     for itm in listofitems:
